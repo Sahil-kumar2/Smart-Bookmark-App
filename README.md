@@ -230,6 +230,41 @@ https://smart-bookmark-app-nine-virid.vercel.app
 
 ---
 
+## Challenges & Solutions
+
+### Challenge 1: OAuth Redirect Mismatch
+**Problem:** Google OAuth returned 400 error after authentication.
+
+**Root Cause:** Redirect URI in Google Cloud Console didn't match the callback URL sent by Supabase.
+
+**Solution:** 
+- Verified exact redirect URI in Supabase dashboard
+- Updated Google Cloud Console with exact match (including protocol and trailing slash)
+- Tested with both development and production URLs
+
+### Challenge 2: RLS Policy Blocking Updates
+**Problem:** Bookmark updates showed success toast but didn't persist to database.
+
+**Root Cause:** RLS enabled on table but `UPDATE` policy was missing.
+
+**Solution:**
+- Added comprehensive logging to capture Supabase response
+- Identified empty data array in response (RLS block signature)
+- Created missing UPDATE policy with proper `USING` and `WITH CHECK` clauses
+- Verified all CRUD policies (SELECT, INSERT, UPDATE, DELETE)
+
+### Challenge 3: Real-time Subscription Not Triggering
+**Problem:** Changes in one tab didn't reflect in other tabs.
+
+**Root Cause:** Realtime replication not enabled for `bookmarks` table.
+
+**Solution:**
+- Enabled replication in Supabase dashboard (Database → Replication)
+- Verified WebSocket connection in browser DevTools
+- Confirmed `postgres_changes` events firing in console
+
+---
+
 ## Setup & Installation
 
 ### Prerequisites
@@ -345,6 +380,7 @@ smart-bookmark-app/
 ```
 
 ---
+
 
 ## Author
 
