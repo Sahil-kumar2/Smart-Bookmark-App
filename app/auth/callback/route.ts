@@ -1,0 +1,8 @@
+import { createServerClient } from '@supabase/ssr'
+import { NextResponse } from 'next/server'
+
+export async function GET(request: Request) {
+  const requestUrl = new URL(request.url)
+  
+  return NextResponse.redirect(new URL('/', requestUrl.origin))
+}
